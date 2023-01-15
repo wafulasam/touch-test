@@ -1,0 +1,19 @@
+/* local fonts */
+
+/* Avenir font */
+
+@font-face {
+    font-family: 'AvenirNext';
+    font-style: normal;
+    font-weight: normal;
+    src: local('AvenirNextLTPro-Regular'), 
+    url('./AvenirNextLTPro-Regular.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'AvenirNext';
+    font-style: normal;
+    font-weight: 700;
+    src: local('AvenirNextLTPro-Bold'), 
+    url('./AvenirNextLTPro-Bold.woff2') format('woff2');
+}

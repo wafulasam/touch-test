@@ -1,0 +1,14 @@
+/* fonts */
+@import './assets/fonts/fonts.css';
+
+html, body {
+    overflow-x: hidden !important ; /*preventing overflow*/
+    margin: 0;
+    padding: 0;
+    /* font-size: 14px; */
+    font-weight: 500;
+    color: #74818D;
+    font-family: 'AvenirNext', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
