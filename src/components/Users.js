@@ -12,7 +12,7 @@ const Users = () => {
                 isLoadingUsers ? <p>loading all users...</p> :
                 isUesrsError ? JSON.stringify(usersError) :
                 allUsers?.map(user => (
-                    <div key={user.id}>
+                    <div key={user._id}>
                         <p>{user.name}</p>
                     </div>
                 ))
