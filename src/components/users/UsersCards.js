@@ -16,8 +16,8 @@ const UsersCards = () => {
             <h4>Card view</h4>
             <div className="card-wrapper row">
                 {users?.map(user => (
-                    <div className="col-md-3">
-                        <div key={user._id} className="card">
+                    <div className="col-md-3" key={user._id}>
+                        <div className="card">
                             <div className="avatar">
                                 <img src={user.image ? user.image : Avatar} alt="avatar" height={100} width={100}/>
                             </div>

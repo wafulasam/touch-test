@@ -36,17 +36,11 @@ const UsersTable = () => {
 
     return (
         <UserStyles>
-            {/* <div>
-            {
-                isLoadingUsers ? <p>loading all users...</p> :
+            {/* {
+                isLoadingUsers ? <TablePreloader count={5}/>  :
                 isUsersError ? JSON.stringify(usersError) :
-                allUsers?.map(user => (
-                    <div key={user._id}>
-                        <p>{user.name}</p>
-                    </div>
-                ))
-            }
-            </div> */}
+                <table></table>
+            } */}
             <h4>Table view</h4>
             <Table>
                 <thead>
