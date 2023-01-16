@@ -1,9 +1,13 @@
 import React from "react";
-import Users from "../components/Users";
+import UsersTable from '../components/users/UsersTable'
+import UsersCards from "../components/users/UsersCards";
 
 const Home = () => {
     return (
-        <Users/>
+       <>
+        <UsersTable/>
+        <UsersCards/>
+       </>
     )
 }
 
