@@ -1,38 +1,51 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Input from '../shared/Input';
 import TextArea from '../shared/TextArea';
 import Button from "../shared/Button";
-import { Spinner } from "reactstrap";
-// import { useUpdateUserQuery } from "../stores/apis/usersApis";
+import Spinner from "../shared/Spinner";
+import { useGetUserByIdQuery, useUpdateUserMutation } from '../../stores/apis/usersApis'
 
 const EditUser = (props) => {
-    const { closeModal, user } = props;
-    const [ name, setName ] = useState(user.name);
-    const [ email, setEmail ] = useState(user.email);
-    const [ occupation, setOccupation ] = useState(user.occupation);
-    const [ bio, setBio ] = useState(user.bio);
-    const [ loading, setLoading ] = useState(false);
+    const { closeModal, userId } = props;
+    const { data:user, error:userError, isLoading:isLoadingUser, isError:isUserError } = useGetUserByIdQuery(userId);
+    const [updateUser, { isLoading , error: editError, isSuccess: patchSuccess}]  = useUpdateUserMutation();
+    const [ name, setName ] = useState('');
+    const [ email, setEmail ] = useState('');
+    const [ occupation, setOccupation ] = useState('');
+    const [ bio, setBio ] = useState('');
 
-    // const [ updateUser ] = useUpdateUserQuery();
-    
+    useEffect(()=> {
+        if(user){
+            setName(user.name);
+            setEmail(user.email);
+            setOccupation(user.occupation)
+            setBio(user.bio)
+        }
+    },[user])
 
     const handleSubmit = () => {
-        setLoading(true);
+        // edited user payload
         const payload = {
-            name: name,
-            email: email,
             occupation: occupation,
-            bio: bio
+            bio: bio,
+            email: email,
+            name: name,
         }
-        console.log(payload)
+        const patch = { userId, payload };
+        updateUser(patch);
+    }
 
+    if(patchSuccess){
+        setInterval(() => {
+            closeModal(()=> false)
+        }, 3000);
     }
 
     return (
         <Styles>
             <div className="modal-header">
-                <h3>{user.name}</h3>
+            { isLoadingUser ? <p>fetching user...</p>  : isUserError ? JSON.stringify(userError) : <h3>{user.name}</h3> }
                 <img src={require('../../assets/icons/close.png')} alt="close" height={30} onClick={closeModal}/>
             </div>
             <div className="form">
@@ -72,13 +85,12 @@ const EditUser = (props) => {
                     padding='10px'
                     onChange={(event) => setBio(event.target.value)}
                 />
-                
                 <Button
-                    label={loading ? <><Spinner><span></span></Spinner></> : 'Edit'}
+                    label={isLoading ? <Spinner/>  : patchSuccess ? 'Success ✅' : editError ? 'Error 🛑! Try Again 🔄' : 'Edit'}
                     padding='10px 30px'
                     width='100%'
                     onClick={()=> handleSubmit()}
-                    disabled={loading}
+                    disabled={isLoading}
                 />
 
             </div>

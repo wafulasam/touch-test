@@ -3,43 +3,44 @@ import styled from 'styled-components';
 import Avatar from '../../assets/icons/avatar.png'
 import { Modal } from 'reactstrap';
 import EditUser from "./EditUser";
-// import { useGetAllUsersQuery } from "../../stores/apis/usersApis";
-
-const { users } = require('../../users');
+import { useGetAllUsersQuery } from "../../stores/apis/usersApis";
 
 const UsersCards = () => {
-    // const { data:allUsers, error:usersError, isLoading:isLoadingUsers, isError:isUsersError } = useGetAllUsersQuery();
+    const { data:allUsers, error:usersError, isLoading:isLoadingUsers, isError:isUsersError } = useGetAllUsersQuery();
     const [ openModal, setOpenModal ] = useState(false);
     const [ currentUser, setCurrentUser ] = useState('');
     return (
         <UserStyles>
             <h4>Card view</h4>
-            <div className="card-wrapper row">
-                {users?.map(user => (
-                    <div className="col-md-3" key={user._id}>
-                        <div className="card">
-                            <div className="avatar">
-                                <img src={user.image ? user.image : Avatar} alt="avatar" height={100} width={100}/>
-                            </div>
-                            <p><b>{user.name}</b></p>
-                            <p>{user.occupation}</p>
-                            <p><i>"{(user.bio).substring(0, 15)}..."</i></p>
-                            <div className="edit-btn-wrapper">
-                                <button className="edit-btn" onClick={()=> {
-                                    setCurrentUser(user)
-                                    setOpenModal(true)
-                                }}>Edit profile</button>
+            {
+                isLoadingUsers ? <p>loading...</p>  :
+                isUsersError ? JSON.stringify(usersError) :
+                <div className="card-wrapper row">
+                    {allUsers?.map(user => (
+                        <div className="col-md-3" key={user.id}>
+                            <div className="card">
+                                <div className="avatar">
+                                    <img src={user.image ? user.image : Avatar} alt="avatar" height={100} width={100}/>
+                                </div>
+                                <p><b>{user.name}</b></p>
+                                <p>{user.occupation}</p>
+                                <p><i>"{(user.bio).substring(0, 15)}..."</i></p>
+                                <div className="edit-btn-wrapper">
+                                    <button className="edit-btn" onClick={()=> {
+                                        setCurrentUser(user)
+                                        setOpenModal(true)
+                                    }}>Edit profile</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
-            </div>
-
+                    ))}
+                </div>
+            }
             {/* edit user modal */}
             <Modal isOpen={openModal}>
                 <EditUser 
                     closeModal={()=> setOpenModal(false)}
-                    user={currentUser}
+                    userId={currentUser.id}
                 />
             </Modal>
 

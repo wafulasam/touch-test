@@ -1,18 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from 'styled-components';
 import Pagination from "../shared/Pagination";
 import { Modal } from 'reactstrap';
 import EditUser from "./EditUser";
-// import { useGetAllUsersQuery } from "../../stores/apis/usersApis";
-
-const { users } = require('../../users');
+import { useGetAllUsersQuery } from "../../stores/apis/usersApis";
 
 const UsersTable = () => {
-    // const { data:allUsers, error:usersError, isLoading:isLoadingUsers, isError:isUsersError } = useGetAllUsersQuery();
+    const { data:allUsers, error:usersError, isLoading:isLoadingUsers, isError:isUsersError } = useGetAllUsersQuery();
     const [ openModal, setOpenModal ] = useState(false);
-    const [ data, setData ] = React.useState(users);
+    const [ data, setData ] = React.useState(allUsers);
     const [ user, setUser ] = React.useState('ASC');
     const [ currentUser, setCurrentUser ] = useState('');
+
+    useEffect(()=>{
+        setData(allUsers);
+    },[allUsers])
 
     const tableSorting = (column) => {
         if(user === 'ASC') {
@@ -29,57 +31,58 @@ const UsersTable = () => {
 
     // pagination
     const [currentPage, setCurrentPage] = useState(1);
-    const [ itemsPerPage ] = useState(4);
+    const [ itemsPerPage ] = useState(5);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const paginatedItems = data?.slice(indexOfFirstItem, indexOfLastItem);
 
     return (
         <UserStyles>
-            {/* {
-                isLoadingUsers ? <TablePreloader count={5}/>  :
+              <h4>Table view</h4>
+            {
+                isLoadingUsers ? <p>loading...</p>  :
                 isUsersError ? JSON.stringify(usersError) :
-                <table></table>
-            } */}
-            <h4>Table view</h4>
-            <Table>
-                <thead>
-                    <tr>
-                        <th onClick={()=> tableSorting('name')}>Name <i className="fa fa-sort"></i></th>
-                        <th onClick={()=> tableSorting('email')}>Email <i className="fa fa-sort"></i></th>
-                        <th onClick={()=> tableSorting('occupation')}>Occupation <i className="fa fa-sort"></i></th>
-                        <th onClick={()=> tableSorting('bio')}>Bio <i className="fa fa-sort"></i></th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    { paginatedItems.map((user) => (
-                            <tr key={user._id} >
-                                <td>{user.name}</td>
-                                <td>{user.email}</td>
-                                <td>{user.occupation}</td>
-                                <td>{(user.bio).substring(0, 30)}</td>
-                                <td onClick={()=> {
-                                    setCurrentUser(user)
-                                    setOpenModal(true)
-                                }}><span className="edit-icon">Edit <i className="fa fa-edit"></i></span></td>
+                <div>
+                    <Table>
+                        <thead>
+                            <tr>
+                                <th onClick={()=> tableSorting('name')}>Name <i className="fa fa-sort"></i></th>
+                                <th onClick={()=> tableSorting('email')}>Email <i className="fa fa-sort"></i></th>
+                                <th onClick={()=> tableSorting('occupation')}>Occupation <i className="fa fa-sort"></i></th>
+                                <th onClick={()=> tableSorting('bio')}>Bio <i className="fa fa-sort"></i></th>
+                                <th>Action</th>
                             </tr>
-                        ))
-                    }
-                </tbody>
-            </Table>
+                        </thead>
+                        <tbody>
+                            { paginatedItems?.map((user) => (
+                                    <tr key={user.id} >
+                                        <td>{user.name}</td>
+                                        <td>{user.email}</td>
+                                        <td>{user.occupation}</td>
+                                        <td>{(user.bio).substring(0, 30)}</td>
+                                        <td onClick={()=> {
+                                            setCurrentUser(user)
+                                            setOpenModal(true)
+                                        }}><span className="edit-icon">Edit <i className="fa fa-edit"></i></span></td>
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
+                    </Table>
 
-            <Pagination
-                itemsPerPage={itemsPerPage}
-                totalItems={users.length}
-                paginate={(pageNumber)=> setCurrentPage(pageNumber)}
-            />
-
+                    <Pagination
+                        itemsPerPage={itemsPerPage}
+                        totalItems={allUsers.length}
+                        paginate={(pageNumber)=> setCurrentPage(pageNumber)}
+                    />
+                </div>
+            }
+            
             {/* edit user modal */}
             <Modal isOpen={openModal}>
                 <EditUser 
                     closeModal={()=> setOpenModal(false)}
-                    user={currentUser}
+                    userId={currentUser.id}
                 />
             </Modal>
 
