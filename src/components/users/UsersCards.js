@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from 'styled-components';
-import Avatar from '../../assets/icons/avatar.png'
+import CardPreloader from "../shared/CardPreloader";
+import Avatar from '../../assets/icons/avatar.png';
 import { Modal } from 'reactstrap';
 import EditUser from "./EditUser";
 import { useGetAllUsersQuery } from "../../stores/apis/usersApis";
@@ -13,7 +14,7 @@ const UsersCards = () => {
         <UserStyles>
             <h4>Card view</h4>
             {
-                isLoadingUsers ? <p>loading...</p>  :
+                isLoadingUsers ? <CardPreloader/> :
                 isUsersError ? JSON.stringify(usersError) :
                 <div className="card-wrapper row">
                     {allUsers?.map(user => (

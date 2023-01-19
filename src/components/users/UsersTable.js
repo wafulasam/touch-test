@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from 'styled-components';
+import TablePreloader from "../shared/TablePreloader";
 import Pagination from "../shared/Pagination";
 import { Modal } from 'reactstrap';
 import EditUser from "./EditUser";
@@ -40,7 +41,7 @@ const UsersTable = () => {
         <UserStyles>
               <h4>Table view</h4>
             {
-                isLoadingUsers ? <p>loading...</p>  :
+                isLoadingUsers ?  <TablePreloader count={5}/>  :
                 isUsersError ? JSON.stringify(usersError) :
                 <div>
                     <Table>
